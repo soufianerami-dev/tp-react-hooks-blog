@@ -5,7 +5,7 @@ import PostSearch from './components/PostSearch';
 // TODO: Exercice 3 - Importer ThemeToggle
 // TODO: Exercice 3 - Importer ThemeProvider et useTheme
 import usePosts from './hooks/usePosts';
-// TODO: Exercice 2 - Importer le hook useLocalStorage
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
   // État local pour la recherche
@@ -18,7 +18,21 @@ function App() {
       fetchPosts
     } = usePosts( {searchTerm} );
   
-  // TODO: Exercice 2 - Utiliser useLocalStorage pour le mode de défilement
+         /* Mode de défilement */
+
+      const [
+
+        infiniteScroll,
+
+        setInfiniteScroll
+
+      ] = useLocalStorage(
+
+        'infiniteScroll',
+
+        true
+
+      );
   
   // TODO: Exercice 3 - Utiliser useCallback pour les gestionnaires d'événements
   
@@ -54,11 +68,23 @@ function App() {
         {/* TODO: Exercice 4 - Ajouter le composant PostDetails */}
         
         {/* TODO: Exercice 1 - Passer les props nécessaires à PostList */}
-              <PostList   posts={posts}
-                          loading={loading}
-                          hasMore={hasMore}
-                          onLoadMore={fetchPosts}
-                />
+                        <PostList
+
+            posts={posts}
+
+            loading={loading}
+
+            hasMore={hasMore}
+
+            onLoadMore={fetchPosts}
+
+            infiniteScroll={
+
+              infiniteScroll
+
+            }
+
+          />
       </main>
       
       <footer className="pt-3 mt-4 text-center border-top">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-// TODO: Exercice 2 - Importer useDebounce
+import useDebounce from './useDebounce';
 
 /**
  * Hook personnalisé pour gérer les posts du blog
@@ -23,7 +23,16 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
   
   // TODO: Exercice 4 - Ajouter l'état pour le post sélectionné
   
-  // TODO: Exercice 2 - Utiliser useDebounce pour le terme de recherche
+       /* Recherche avec délai */
+
+    const debouncedSearchTerm =
+    useDebounce(
+
+      searchTerm,
+
+      500
+
+    );
   
   // TODO: Exercice 3 - Utiliser useCallback pour construire l'URL de l'API
       
@@ -31,10 +40,10 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
 
       const buildApiUrl = (skip = 0) => {
 
-        if (searchTerm.trim() !== '') {
+        if (debouncedSearchTerm.trim() !== '') {
 
           return `https://dummyjson.com/posts/search?q=${encodeURIComponent(
-            searchTerm
+            debouncedSearchTerm
           )}`;
 
         }
@@ -112,7 +121,7 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
 
         fetchPosts(true);
 
-      }, [searchTerm]);
+      }, [debouncedSearchTerm]);
   
   // TODO: Exercice 4 - Implémenter la fonction pour charger plus de posts
   
