@@ -45,7 +45,29 @@ function PostSearch({
               onChange={handleSearchChange}
               aria-label="Rechercher"
             />
-            {/* TODO: Exercice 1 - Ajouter le bouton pour effacer la recherche */}
+                      {searchInput && (
+
+            <button
+
+              type="button"
+
+              className="btn btn-outline-secondary"
+
+              onClick={() => {
+
+                setSearchInput('');
+
+                onSearch('');
+
+              }}
+
+            >
+
+              Effacer
+
+            </button>
+
+          )}
           </div>
         </div>
         

@@ -16,31 +16,103 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // TODO: Exercice 1 - Ajouter les états nécessaires pour la pagination
+  /* États de pagination */
+
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   
   // TODO: Exercice 4 - Ajouter l'état pour le post sélectionné
   
   // TODO: Exercice 2 - Utiliser useDebounce pour le terme de recherche
   
   // TODO: Exercice 3 - Utiliser useCallback pour construire l'URL de l'API
-  const buildApiUrl = (skip = 0) => {
-    // Construire l'URL en fonction des filtres
-    return 'https://dummyjson.com/posts';
-  };
+      
+        /* Construire l'URL de l'API */
+
+      const buildApiUrl = (skip = 0) => {
+
+        if (searchTerm.trim() !== '') {
+
+          return `https://dummyjson.com/posts/search?q=${encodeURIComponent(
+            searchTerm
+          )}`;
+
+        }
+
+        return `https://dummyjson.com/posts?limit=${limit}&skip=${skip}`;
+
+      };
   
   // TODO: Exercice 1 - Implémenter la fonction pour charger les posts
+      /* Charger les posts depuis l'API */
+
   const fetchPosts = async (reset = false) => {
+
     try {
+
       setLoading(true);
-      // Appeler l'API et mettre à jour les états
+      setError(null);
+
+      const skip = reset ? 0 : page * limit;
+
+        const response =  await fetch(
+         buildApiUrl(skip)
+                  );
+
+      if (!response.ok) {
+
+        throw new Error(
+          'Erreur lors du chargement des posts'
+        );
+
+      }
+
+      const data =
+        await response.json();
+
+      if (reset) {
+
+        setPosts(data.posts);
+
+      } else {
+
+        setPosts((prev) => [
+
+          ...prev,
+
+          ...data.posts
+
+        ]);
+
+      }
+
+      setHasMore(
+
+        skip + limit < data.total
+
+      );
+
     } catch (err) {
+
       setError(err.message);
+
     } finally {
+
       setLoading(false);
+
     }
+
   };
   
-  // TODO: Exercice 1 - Utiliser useEffect pour charger les posts quand les filtres changent
+    /* Recharger les posts lorsque la recherche change */
+
+      useEffect(() => {
+
+        setPage(0);
+
+        fetchPosts(true);
+
+      }, [searchTerm]);
   
   // TODO: Exercice 4 - Implémenter la fonction pour charger plus de posts
   
@@ -49,11 +121,12 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
   // TODO: Exercice 4 - Implémenter la fonction pour charger un post par son ID
   
   return {
-    posts,
-    loading,
-    error,
-    // Retourner les autres états et fonctions
-  };
+
+  posts, loading, error, page,
+
+  setPage, hasMore, fetchPosts
+
+} 
 }
 
 export default usePosts;
