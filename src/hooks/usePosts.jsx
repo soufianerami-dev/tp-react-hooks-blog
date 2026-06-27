@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import useDebounce from './useDebounce';
 
 /**
@@ -34,12 +34,11 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
 
     );
   
-  // TODO: Exercice 3 - Utiliser useCallback pour construire l'URL de l'API
+  
       
         /* Construire l'URL de l'API */
 
-      const buildApiUrl = (skip = 0) => {
-
+        const buildApiUrl = useCallback( (skip = 0) => { 
         if (debouncedSearchTerm.trim() !== '') {
 
           return `https://dummyjson.com/posts/search?q=${encodeURIComponent(
@@ -48,11 +47,21 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
 
         }
 
-        return `https://dummyjson.com/posts?limit=${limit}&skip=${skip}`;
+       return `https://dummyjson.com/posts?limit=${limit}&skip=${skip}`;
 
-      };
+},
+
+[
+
+  debouncedSearchTerm,
+
+  limit
+
+]
+
+);
   
-  // TODO: Exercice 1 - Implémenter la fonction pour charger les posts
+
       /* Charger les posts depuis l'API */
 
   const fetchPosts = async (reset = false) => {
@@ -122,10 +131,29 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
         fetchPosts(true);
 
       }, [debouncedSearchTerm]);
+
+            /* Liste des tags uniques */
+
+      const availableTags =
+      useMemo(() => {
+
+        const tags =
+        posts.flatMap(
+
+          (post) => post.tags || []
+
+        );
+
+        return [
+
+          ...new Set(tags)
+
+        ];
+
+      }, [posts]);
   
   // TODO: Exercice 4 - Implémenter la fonction pour charger plus de posts
   
-  // TODO: Exercice 3 - Utiliser useMemo pour calculer les tags uniques
   
   // TODO: Exercice 4 - Implémenter la fonction pour charger un post par son ID
   
@@ -133,7 +161,7 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
 
   posts, loading, error, page,
 
-  setPage, hasMore, fetchPosts
+  setPage, hasMore, fetchPosts, availableTags,
 
 } 
 }

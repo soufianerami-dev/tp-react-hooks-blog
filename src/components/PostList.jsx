@@ -1,5 +1,5 @@
-import React from 'react';
-// TODO: Exercice 3 - Importer useTheme
+import React, {useCallback } from 'react';
+import { useTheme } from '../context/ThemeContext';
 // TODO: Exercice 4 - Importer useIntersectionObserver
 import LoadingSpinner from './LoadingSpinner';
 
@@ -23,24 +23,52 @@ function PostList({
   onTagClick,
   infiniteScroll = true
 }) {
-  // TODO: Exercice 3 - Utiliser le hook useTheme
+  /* Thème actuel */
+
+  const {
+
+    theme
+
+  } = useTheme();
   
   // TODO: Exercice 4 - Utiliser useIntersectionObserver pour le défilement infini
   
-  // TODO: Exercice 3 - Utiliser useCallback pour les gestionnaires d'événements
-  const handlePostClick = (post) => {
-    if (onPostClick) {
-      onPostClick(post);
-    }
-  };
+    const handlePostClick =
+    useCallback(
+
+      (post) => {
+
+        if (onPostClick) {
+
+          onPostClick(post);
+
+        }
+
+      },
+
+      [onPostClick]
+
+    );
   
-  const handleTagClick = (e, tag) => {
-    e.stopPropagation(); // Éviter de déclencher le clic sur le post
-    if (onTagClick) {
-      onTagClick(tag);
-    }
-  };
-  
+        const handleTagClick =
+    useCallback(
+
+      (e, tag) => {
+
+        e.stopPropagation();
+
+        if (onTagClick) {
+
+          onTagClick(tag);
+
+        }
+
+      },
+
+      [onTagClick]
+
+    );
+      
       /* Aucun post trouvé */
 
   if (!loading && posts.length === 0) {
@@ -58,7 +86,8 @@ function PostList({
   }
   
   return (
-    <div className="post-list">
+    <div
+  className={`post-list ${theme}`}>
           {posts.map((post) => (
 
       <div
@@ -127,5 +156,4 @@ function PostList({
   );
 }
 
-// TODO: Exercice 3 - Utiliser React.memo pour optimiser les rendus
-export default PostList;
+export default React.memo(PostList);

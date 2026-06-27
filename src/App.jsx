@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import './App.css';
 import PostList from './components/PostList';
 import PostSearch from './components/PostSearch';
-// TODO: Exercice 3 - Importer ThemeToggle
-// TODO: Exercice 3 - Importer ThemeProvider et useTheme
+import ThemeToggle from './components/ThemeToggle';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import usePosts from './hooks/usePosts';
 import useLocalStorage from './hooks/useLocalStorage';
 
-function App() {
+function BlogApp() {
   // État local pour la recherche
   const [searchTerm, setSearchTerm] = useState('');
-  // TODO: Exercice 4 - Ajouter l'état pour le tag sélectionné
+ 
+     /* Thème actuel */
+
+  const { theme } = useTheme();
   
       /* Gestion des posts */
 
@@ -24,7 +27,6 @@ function App() {
 
         infiniteScroll,
 
-        setInfiniteScroll
 
       ] = useLocalStorage(
 
@@ -34,21 +36,32 @@ function App() {
 
       );
   
-  // TODO: Exercice 3 - Utiliser useCallback pour les gestionnaires d'événements
   
-  // Gestionnaire pour la recherche
-  const handleSearchChange = (term) => {
-    setSearchTerm(term);
-  };
+  
+          /* Gestionnaire de recherche */
+
+    const handleSearchChange =
+    useCallback(
+
+      (term) => {
+
+        setSearchTerm(term);
+
+      },
+
+      []
+
+    );
   
   // TODO: Exercice 4 - Ajouter le gestionnaire pour la sélection de tag
   
   return (
-    <div className="container py-4">
+    <div className={`container py-4 ${theme}`}>
+
       <header className="pb-3 mb-4 border-bottom">
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="display-5 fw-bold">Blog</h1>
-          {/* TODO: Exercice 3 - Ajouter le ThemeToggle */}
+          <ThemeToggle />
         </div>
       </header>
       
@@ -96,4 +109,18 @@ function App() {
   );
 }
 
-export default App;
+    function App() {
+
+      return (
+
+        <ThemeProvider>
+
+          <BlogApp />
+
+        </ThemeProvider>
+
+      );
+
+    }
+
+    export default App;

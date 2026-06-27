@@ -54,4 +54,62 @@ body,
   opacity: 0.8;
 }
 
-/* TODO: Exercice 3 - Ajouter des styles spécifiques au mode sombre */
+/* Mode sombre */
+
+.dark {
+
+  background-color: #212529;
+
+  color: #ffffff;
+
+}
+
+.dark .card {
+
+  background-color: #343a40;
+
+  color: #ffffff;
+
+}
+
+.dark .form-control {
+
+  background-color: #495057;
+
+  color: #ffffff;
+
+  border-color: #6c757d;
+
+}
+
+.dark .form-control::placeholder {
+
+  color: #ced4da;
+
+}
+
+.dark .input-group-text {
+
+  background-color: #495057;
+
+  color: #ffffff;
+
+  border-color: #6c757d;
+
+}
+
+.dark .btn {
+
+  border-color: #ffffff;
+
+  color: #ffffff;
+
+}
+
+.dark .btn:hover {
+
+  background-color: #ffffff;
+
+  color: #212529;
+
+}
