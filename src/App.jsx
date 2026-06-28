@@ -6,10 +6,19 @@ import ThemeToggle from './components/ThemeToggle';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import usePosts from './hooks/usePosts';
 import useLocalStorage from './hooks/useLocalStorage';
+import PostDetails from './components/PostDetails';
 
 function BlogApp() {
   // État local pour la recherche
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [
+
+  selectedTag,
+
+  setSelectedTag
+
+] = useState('');
  
      /* Thème actuel */
 
@@ -17,9 +26,18 @@ function BlogApp() {
   
       /* Gestion des posts */
 
-    const { posts, loading, error, hasMore, 
-      fetchPosts
-    } = usePosts( {searchTerm} );
+  const {
+
+          posts,
+          loading,
+          error,
+          hasMore,
+          loadMore,
+          availableTags,
+          selectedPost,
+          loadPostById
+
+         } = usePosts({ searchTerm });
   
          /* Mode de défilement */
 
@@ -53,7 +71,18 @@ function BlogApp() {
 
     );
   
-  // TODO: Exercice 4 - Ajouter le gestionnaire pour la sélection de tag
+      const handleTagSelect =
+    useCallback(
+
+      (tag) => {
+
+        setSelectedTag(tag);
+
+      },
+
+      []
+
+    );
   
   return (
     <div className={`container py-4 ${theme}`}>
@@ -66,7 +95,17 @@ function BlogApp() {
       </header>
       
       <main>
-        <PostSearch onSearch={handleSearchChange} />
+        <PostSearch
+
+          onSearch={handleSearchChange}
+
+          onTagSelect={handleTagSelect}
+
+          availableTags={availableTags}
+
+          selectedTag={selectedTag}
+
+        />
         
               {error && (
 
@@ -78,26 +117,39 @@ function BlogApp() {
 
       )}
         
-        {/* TODO: Exercice 4 - Ajouter le composant PostDetails */}
-        
-        {/* TODO: Exercice 1 - Passer les props nécessaires à PostList */}
-                        <PostList
+        <PostDetails
 
-            posts={posts}
+            post={selectedPost}
 
-            loading={loading}
+            onClose={() => {}}
 
-            hasMore={hasMore}
-
-            onLoadMore={fetchPosts}
-
-            infiniteScroll={
-
-              infiniteScroll
-
-            }
+            onTagClick={handleTagSelect}
 
           />
+        
+        {/* TODO: Exercice 1 - Passer les props nécessaires à PostList */}
+          
+          <PostList
+
+              posts={posts}
+
+              loading={loading}
+
+              hasMore={hasMore}
+
+              onLoadMore={loadMore}
+
+              onPostClick={(post) =>
+
+                loadPostById(post.id)
+
+              }
+
+              onTagClick={handleTagSelect}
+
+              infiniteScroll={infiniteScroll}
+
+            />
       </main>
       
       <footer className="pt-3 mt-4 text-center border-top">

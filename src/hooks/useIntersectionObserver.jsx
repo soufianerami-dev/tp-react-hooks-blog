@@ -13,13 +13,79 @@ function useIntersectionObserver({
   threshold = 0.1,
   rootMargin = '0px'
 } = {}) {
-  // TODO: Exercice 4 - Implémenter le hook useIntersectionObserver
-  // 1. Créer un état pour suivre l'intersection
-  // 2. Créer une référence pour l'élément à observer
-  // 3. Configurer l'IntersectionObserver dans un useEffect
-  // 4. Retourner la référence et l'état d'intersection
-  
-  return [null, false]; // À modifier
+    /* État d'intersection */
+
+  const [isIntersecting, setIsIntersecting] =
+  useState(false);
+
+  /* Référence de l'élément */
+
+  const elementRef =
+  useRef(null);
+
+  /* Observer l'élément */
+
+  useEffect(() => {
+
+    if (
+
+      !enabled ||
+
+      !elementRef.current
+
+    ) {
+
+      return;
+
+    }
+
+    const observer =
+    new IntersectionObserver(
+
+      ([entry]) => {
+
+        setIsIntersecting(
+          entry.isIntersecting
+        );
+
+      },
+
+      {
+
+        threshold,
+
+        rootMargin
+
+      }
+
+    );
+
+    observer.observe(
+      elementRef.current
+    );
+
+    return () => {
+
+      observer.disconnect();
+
+    };
+
+  }, [
+
+    enabled,
+
+    threshold,
+
+    rootMargin
+
+  ]);
+  return [
+
+  elementRef,
+
+  isIntersecting
+
+];
 }
 
 export default useIntersectionObserver;

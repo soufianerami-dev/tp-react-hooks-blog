@@ -1,6 +1,6 @@
-import React, {useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
-// TODO: Exercice 4 - Importer useIntersectionObserver
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import LoadingSpinner from './LoadingSpinner';
 
 /**
@@ -31,7 +31,21 @@ function PostList({
 
   } = useTheme();
   
-  // TODO: Exercice 4 - Utiliser useIntersectionObserver pour le défilement infini
+      /* Observer pour le chargement */
+
+    const [
+
+      loadMoreRef,
+
+      isIntersecting
+
+    ] = useIntersectionObserver({
+
+      enabled:
+
+        infiniteScroll && hasMore
+
+    });
   
     const handlePostClick =
     useCallback(
@@ -68,6 +82,34 @@ function PostList({
       [onTagClick]
 
     );
+
+        /* Charger plus lorsque l'élément est visible */
+
+      useEffect(() => {
+
+    if (
+
+      isIntersecting &&
+
+      hasMore &&
+
+      onLoadMore
+
+    ) {
+
+      onLoadMore();
+
+    }
+
+  }, [
+
+    isIntersecting,
+
+    hasMore,
+
+    onLoadMore
+
+  ]);
       
       /* Aucun post trouvé */
 
@@ -90,11 +132,17 @@ function PostList({
   className={`post-list ${theme}`}>
           {posts.map((post) => (
 
-      <div
+        <div
 
-        key={post.id}
+          key={post.id}
 
-        className="post-card"
+          className="post-card"
+
+          onClick={() =>
+
+            handlePostClick(post)
+
+          }
 
       >
 
@@ -135,7 +183,7 @@ function PostList({
       {/* Afficher le spinner de chargement */}
       {loading && <LoadingSpinner />}
       
-      {/* TODO: Exercice 4 - Ajouter la référence pour le défilement infini */}
+      <div ref={loadMoreRef}></div>
       
               {!infiniteScroll &&
 

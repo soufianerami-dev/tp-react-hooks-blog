@@ -21,7 +21,15 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   
-  // TODO: Exercice 4 - Ajouter l'état pour le post sélectionné
+        /* Post sélectionné */
+
+      const [
+
+        selectedPost,
+
+        setSelectedPost
+
+      ] = useState(null);
   
        /* Recherche avec délai */
 
@@ -132,6 +140,22 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
 
       }, [debouncedSearchTerm]);
 
+           /* Charger une nouvelle page */
+
+      useEffect(() => {
+
+        if (
+
+          page > 0
+
+        ) {
+
+          fetchPosts();
+
+        }
+
+      }, [page]);
+
             /* Liste des tags uniques */
 
       const availableTags =
@@ -152,16 +176,73 @@ function usePosts({ searchTerm = '', tag = '', limit = 10, infinite = true } = {
 
       }, [posts]);
   
-  // TODO: Exercice 4 - Implémenter la fonction pour charger plus de posts
+        /* Charger la page suivante */
+
+      const loadMore = () => {
+
+        if (
+
+          hasMore &&
+
+          !loading
+
+        ) {
+
+          setPage(
+
+            (prev) => prev + 1
+
+          );
+
+        }
+
+      };
   
   
-  // TODO: Exercice 4 - Implémenter la fonction pour charger un post par son ID
+  /* Charger un post par son ID */
+
+const loadPostById = async (id) => {
+
+  try {
+
+    setLoading(true);
+
+    const response = await fetch(
+
+      `https://dummyjson.com/posts/${id}`
+
+    );
+
+    if (!response.ok) {
+
+      throw new Error(
+
+        'Erreur lors du chargement du post'
+
+      );
+
+    }
+
+    const data = await response.json();
+
+    setSelectedPost(data);
+
+  } catch (err) {
+
+    setError(err.message);
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+};
   
   return {
 
-  posts, loading, error, page,
-
-  setPage, hasMore, fetchPosts, availableTags,
+  posts, loading, error, page, setPage, hasMore, loadMore, 
+  availableTags, selectedPost, loadPostById,
 
 } 
 }

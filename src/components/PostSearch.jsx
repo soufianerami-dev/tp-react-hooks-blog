@@ -88,7 +88,47 @@ const { theme } = useTheme();
           </div>
         </div>
         
-        {/* TODO: Exercice 4 - Ajouter le sélecteur de tags */}
+            <div className="col-md-4">
+
+      <select
+
+        className={`form-select ${themeClasses}`}
+
+        value={selectedTag}
+
+        onChange={(e) =>
+
+          onTagSelect(e.target.value)
+
+        }
+
+      >
+
+        <option value="">
+
+          Tous les tags
+
+        </option>
+
+        {availableTags.map((tag) => (
+
+          <option
+
+            key={tag}
+
+            value={tag}
+
+          >
+
+            {tag}
+
+          </option>
+
+        ))}
+
+      </select>
+
+    </div>
       </div>
     </div>
   );
